@@ -1,0 +1,178 @@
+/*
+    Cores e variáveis
+    A paleta foi inspirada na ideia de uma "caixa preta" tecnológica.
+*/
+:root {
+    --bg-color: #121212; /* Fundo escuro */
+    --text-color: #e0e0e0; /* Texto claro */
+    --accent-color: #00ffc8; /* Verde neon para destaque */
+    --border-color: #404040; /* Cinza para bordas */
+}
+
+/* Estilos globais */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Links */
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Layout principal */
+.container {
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "main aside"
+        "footer footer";
+    grid-template-columns: 3fr 1fr; /* Proporção de 3 para 1 */
+    gap: 20px;
+    padding: 20px;
+    flex: 1;
+}
+
+/* Cabeçalho */
+header {
+    grid-area: header;
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-bottom: 2px solid var(--accent-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header h1 {
+    margin: 0;
+    color: var(--accent-color);
+    text-shadow: 0 0 5px var(--accent-color);
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 20px;
+}
+
+header nav a {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Conteúdo principal */
+main {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Seções */
+section {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-left: 5px solid var(--accent-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+section h2 {
+    color: var(--accent-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+/* Barra lateral */
+aside {
+    grid-area: aside;
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border-right: 5px solid var(--accent-color);
+}
+
+aside h3 {
+    color: var(--accent-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+aside ul {
+    list-style: none;
+    padding: 0;
+}
+
+aside ul li {
+    margin-bottom: 10px;
+}
+
+/* Rodapé */
+footer {
+    grid-area: footer;
+    background-color: #1e1e1e;
+    text-align: center;
+    padding: 20px;
+    border-top: 2px solid var(--accent-color);
+    margin-top: 20px;
+}
+
+footer address {
+    font-style: normal;
+}
+
+/* Estilos para o DOM.html */
+.dom-page {
+    background-color: #282c34;
+    color: #abb2bf;
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.4;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.dom-page pre {
+    background-color: #1e1e1e;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.dom-page .tag { color: #e06c75; }
+.dom-page .attribute { color: #d19a66; }
+.dom-page .value { color: #98c379; }
+.dom-page .comment { color: #5c6370; }
+.dom-page .text { color: #abb2bf; }
+
+.dom-page h1 {
+    color: #61afef;
+    text-align: center;
+}
+
+.dom-page .link-back {
+    display: block;
+    margin-bottom: 20px;
+    text-align: center;
+}
