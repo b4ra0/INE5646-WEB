@@ -1,12 +1,8 @@
-/*
-    Cores e variáveis
-    A paleta foi inspirada na ideia de uma "caixa preta" tecnológica.
-*/
 :root {
-    --bg-color: #121212; /* Fundo escuro */
-    --text-color: #e0e0e0; /* Texto claro */
-    --accent-color: #00ffc8; /* Verde neon para destaque */
-    --border-color: #404040; /* Cinza para bordas */
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --accent-color: #00ffc8;
+    --border-color: #404040;
 }
 
 /* Estilos globais */

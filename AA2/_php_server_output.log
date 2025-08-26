@@ -1,0 +1,19 @@
+[Tue Aug 26 19:35:03 2025] PHP 8.3.6 Development Server (http://127.0.0.1:8080) started
+[Tue Aug 26 19:35:08 2025] 127.0.0.1:41576 Accepted
+[Tue Aug 26 19:35:08 2025] 127.0.0.1:41586 Accepted
+[Tue Aug 26 19:35:08 2025] 127.0.0.1:41576 [200]: GET /index.html
+[Tue Aug 26 19:35:08 2025] 127.0.0.1:41576 Closing
+[Tue Aug 26 19:35:08 2025] 127.0.0.1:41586 [200]: GET /styles.css
+[Tue Aug 26 19:35:08 2025] 127.0.0.1:41586 Closing
+[Tue Aug 26 19:35:13 2025] 127.0.0.1:47238 Accepted
+[Tue Aug 26 19:35:14 2025] 127.0.0.1:47238 [200]: GET /index.html
+[Tue Aug 26 19:35:14 2025] 127.0.0.1:47238 Closing
+[Tue Aug 26 19:35:14 2025] 127.0.0.1:47246 Accepted
+[Tue Aug 26 19:35:14 2025] 127.0.0.1:47246 [200]: GET /styles.css
+[Tue Aug 26 19:35:14 2025] 127.0.0.1:47246 Closing
+[Tue Aug 26 19:35:18 2025] 127.0.0.1:47260 Accepted
+[Tue Aug 26 19:35:18 2025] 127.0.0.1:47272 Accepted
+[Tue Aug 26 19:35:18 2025] 127.0.0.1:47260 [200]: GET /DOM.html
+[Tue Aug 26 19:35:18 2025] 127.0.0.1:47260 Closing
+[Tue Aug 26 19:35:19 2025] 127.0.0.1:47272 [200]: GET /styles.css
+[Tue Aug 26 19:35:19 2025] 127.0.0.1:47272 Closing
