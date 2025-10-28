@@ -121,3 +121,35 @@ Anexe o roteiro detalhado de instalação e configuração no arquivo README.md.
 Anexe todos os arquivos de configuração e instalação.
 Caso faça alterações nos clientes, documente e os anexe na atividade.
 Esta atividade deverá ser desenvolvida em grupo.
+
+---
+
+## Execução local (teste rápido)
+
+Para facilitar o desenvolvimento e a validação local, incluí um servidor combinado (WebSocket + TCP + UDP) em `py/server_combined.py` que replica o comportamento esperado no VPS.
+
+Passos mínimos para testar localmente (Linux):
+
+1. Crie um ambiente Python 3.11+ (recomendado) e instale dependências:
+
+   pip install -r AA11/py/requirements.txt
+
+2. Inicie o servidor combinado (executar na pasta `AA11/py` ou usando caminho completo):
+
+   python3 AA11/py/server_combined.py
+
+   Isso abrirá:
+   - WebSocket em ws://0.0.0.0:8082
+   - TCP em 0.0.0.0:8080
+   - UDP em 0.0.0.0:8081
+
+3. Abra a página `AA11/index.html` em um navegador apontando para o servidor web (por exemplo, se estiver servindo via Apache ou abrindo arquivo localmente), e clique em "Iniciar Servidor" para conectar ao WebSocket.
+
+4. Use os clientes fornecidos para enviar mensagens:
+
+   - Cliente TCP: `AA11/py/tcp_client.py` — informe a URL do servidor (ex: `localhost:8080`) e envie mensagens.
+   - Cliente UDP: `AA11/py/udp_client.py` — informe a URL do servidor (ex: `localhost:8081`) e envie mensagens.
+
+As mensagens recebidas pelos sockets TCP/UDP serão encaminhadas ao(s) cliente(s) WebSocket conectados e exibidas no frontend com as flags TCP/UDP, IP, data/hora e conteúdo.
+
+Observação: para submissão no VPS-UFSC siga as instruções originais do enunciado (configurar Apache, habilitar CGI para os scripts Python se desejar usar `server_manager.py`, ou rodar o `server_combined.py` em serviço separado e expor o WebSocket na porta 8082). Instruções detalhadas de deploy foram deixadas no corpo principal do enunciado e podem ser adicionadas neste README conforme o procedimento adotado no VPS.
