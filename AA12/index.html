@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AA12 - Cadastro e Localidades (ViaCEP + IBGE)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>AA12 - Cadastro e Localidades</h1>
+
+    <section id="register-section">
+      <h2>Cadastro</h2>
+      <form id="register-form">
+        <label>Nome<br/><input type="text" id="r-name" required></label>
+        <label>Email<br/><input type="email" id="r-email" required></label>
+        <label>Senha<br/><input type="password" id="r-password" required></label>
+
+        <fieldset>
+          <legend>Endereço</legend>
+          <label>CEP<br/><input type="text" id="r-cep" maxlength="8" pattern="\d{8}" placeholder="Ex: 88040370" required></label>
+          <button type="button" id="buscar-cep">Buscar CEP</button>
+          <label>Logradouro<br/><input type="text" id="r-logradouro"></label>
+          <label>Bairro<br/><input type="text" id="r-bairro"></label>
+          <label>Município<br/><input type="text" id="r-municipio"></label>
+          <label>UF<br/><input type="text" id="r-uf"></label>
+        </fieldset>
+
+        <div class="actions">
+          <button type="submit">Cadastrar</button>
+          <button type="button" id="goto-login">Já tenho conta / Login</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="login-section" class="hidden">
+      <h2>Login</h2>
+      <form id="login-form">
+        <label>Email<br/><input type="email" id="l-email" required></label>
+        <label>Senha<br/><input type="password" id="l-password" required></label>
+        <div class="actions">
+          <button type="submit">Entrar</button>
+          <button type="button" id="goto-register">Voltar para cadastro</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="main-section" class="hidden">
+      <h2>Bem-vindo, <span id="user-name"></span></h2>
+      <p>Selecione sua UF e município (dados carregados via IBGE):</p>
+      <label>UF<br/>
+        <select id="uf-select">
+          <option value="">-- selecione uma UF --</option>
+        </select>
+      </label>
+      <label>Município<br/>
+        <select id="city-select" disabled>
+          <option value="">-- escolha uma UF primeiro --</option>
+        </select>
+      </label>
+      <div class="actions">
+        <button id="logout">Sair</button>
+      </div>
+    </section>
+
+    <footer>
+      <p>Implementação mínima AA12 — Fetch ViaCEP + IBGE</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
