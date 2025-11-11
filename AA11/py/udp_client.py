@@ -13,7 +13,7 @@ import urllib.parse
 
 BUFFER_SIZE = 1024
 timeout = 2 * 60   # [segundos]
-url = 'web.lucas.barao.vms.ufsc.br/AA11'
+url = 'web.lucas.barao.vms.ufsc.br'
 p = 8081
 
 

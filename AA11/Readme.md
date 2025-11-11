@@ -139,16 +139,16 @@ Passos mínimos para testar localmente (Linux):
    python3 AA11/py/server_combined.py
 
    Isso abrirá:
-   - WebSocket em ws://0.0.0.0:8082
-   - TCP em 0.0.0.0:8080
-   - UDP em 0.0.0.0:8081
+   - WebSocket em ws://web.lucas.barao.vms.ufsc.br/:8082
+   - TCP em http://web.lucas.barao.vms.ufsc.br/:8080
+   - UDP em http://web.lucas.barao.vms.ufsc.br/:8081
 
 3. Abra a página `AA11/index.html` em um navegador apontando para o servidor web (por exemplo, se estiver servindo via Apache ou abrindo arquivo localmente), e clique em "Iniciar Servidor" para conectar ao WebSocket.
 
 4. Use os clientes fornecidos para enviar mensagens:
 
-   - Cliente TCP: `AA11/py/tcp_client.py` — informe a URL do servidor (ex: `localhost:8080`) e envie mensagens.
-   - Cliente UDP: `AA11/py/udp_client.py` — informe a URL do servidor (ex: `localhost:8081`) e envie mensagens.
+   - Cliente TCP: `AA11/py/tcp_client.py` — http://web.lucas.barao.vms.ufsc.br:8080.
+   - Cliente UDP: `AA11/py/udp_client.py` — http://web.lucas.barao.vms.ufsc.br:8081.
 
 As mensagens recebidas pelos sockets TCP/UDP serão encaminhadas ao(s) cliente(s) WebSocket conectados e exibidas no frontend com as flags TCP/UDP, IP, data/hora e conteúdo.
 
