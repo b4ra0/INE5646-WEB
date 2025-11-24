@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Hello World</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Box Game</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Hello, World!</h1>
+    <h1>Black Box</h1>
+    <div id="game-container">
+        <div id="game-board"></div>
+    </div>
+    <div id="controls">
+        <p id="status-message">Posicione os átomos ou atire um raio!</p>
+        <button id="new-game-btn">Novo Jogo (com Bot)</button>
+    </div>
+
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
