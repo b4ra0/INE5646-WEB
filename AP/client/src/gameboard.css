@@ -1,0 +1,39 @@
+
+:root{
+  --bg:#ffffff; --fg:#111827; --muted:#6b7280;
+  --gray100:#f3f4f6; --gray200:#e5e7eb; --gray400:#9ca3af; --gray800:#1f2937;
+  --emerald200:#a7f3d0; --yellow200:#fef08a; --blue600:#2563eb; --green600:#059669; --orange600:#ea580c; --pink600:#db2777; --purple600:#7c3aed; --black:#111827; --white:#ffffff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--fg);}
+.container{min-height:100vh;display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px;}
+h1{font-size:28px;margin:8px 0;}
+.small{font-size:14px;color:var(--muted);max-width:900px;text-align:center}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+.btn.gray{background:var(--gray200)}
+.btn.primary{background:var(--blue600);color:var(--white)}
+.btn.green{background:var(--green600);color:var(--white)}
+.btn.dark{background:var(--black);color:var(--white)}
+.btn.purple{background:var(--purple600);color:var(--white)}
+.btn.orange{background:var(--orange600);color:var(--white)}
+.btn.pink{background:var(--pink600);color:var(--white)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.card{border:1px solid var(--gray200);background:#fff;padding:8px;border-radius:8px}
+.grid{display:grid;grid-template-columns:repeat(8, 40px);gap:0}
+.cell{width:40px;height:40px;border:1px solid #9ca3af;background:#fff;display:flex;align-items:center;justify-content:center;user-select:none}
+.cell.flag{background:var(--yellow200)}
+.cell.atom{background:var(--emerald200)}
+.edgeCol,.edgeRow{display:flex;flex-direction:column;gap:4px}
+.edgeRow{flex-direction:row}
+.edgeBtn{font-size:12px;padding:4px 6px;border-radius:6px;border:none;background:var(--black);color:#fff;cursor:pointer}
+.edgeBtn:disabled{background:var(--gray400)}
+.badge{font-size:12px;border-radius:6px;padding:2px 6px;background:var(--gray800);color:#fff}
+.table{width:100%;border-collapse:collapse;font-size:12px}
+.table th,.table td{border:1px solid var(--gray200);padding:4px 6px;text-align:left}
+.table thead{background:var(--gray100)}
+.section{width:100%;max-width:1000px}
+.stats{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:8px}
+ul{margin:0;padding-left:16px}
+.column{display:flex;flex-direction:column}
+input{padding:6px 8px;border-radius:4px;border:1px solid var(--gray200);}

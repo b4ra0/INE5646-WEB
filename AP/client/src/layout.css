@@ -1,0 +1,111 @@
+/* client/src/layout.css */
+
+.page-root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.center-all {
+  justify-content: center;
+}
+
+.content-center {
+  align-items: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 1100px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-row {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.two-lists {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.auth-card {
+  max-width: 480px;
+  text-align: center;
+  padding: 30px;
+}
+
+.tab-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.form-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.submit-btn {
+  margin-top: 8px;
+}
+
+.error-text {
+  color: red;
+  font-size: 13px;
+}
+
+/* infos do perfil */
+.profile-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 4px 16px;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.profile-label {
+  font-weight: 600;
+  color: #6b7280;
+  margin-right: 4px;
+}
+
+/* tabuleiro sem espaçamento gigante */
+.board-wrapper {
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 16px;
+}
+
+.avatar-preview {
+  margin: 12px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar-preview img {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 2px solid #2563eb;
+}
