@@ -276,7 +276,8 @@ export default function GameBoard({ currentUser, onGameSaved }) {
   }
 
   const showAtoms = g.revealed || (g.mode==='pvp' && g.pvpPhase==='setup');
-  const edgesDisabled = g.locked || (g.mode==='pvp' && g.pvpPhase!=='play');
+  const edgesDisabled = g.locked;
+
 
   const winner = g.matchOver
     ? (g.pvpScores.A===g.pvpScores.B
@@ -304,8 +305,9 @@ export default function GameBoard({ currentUser, onGameSaved }) {
     return { bySide, results, exitsBySide };
   }, [g.shots]);
 
+  // não usamos mais "container" aqui pra não forçar min-height
   return (
-    <div className="container">
+    <div style={{ width: '100%' }}>
       <h1>Black Box — Bot &amp; 1v1</h1>
       <p className="small">
         Dispare raios pelas bordas para deduzir onde estão os {N_ATOMS} átomos
@@ -313,7 +315,7 @@ export default function GameBoard({ currentUser, onGameSaved }) {
         palpites. Pontuação: 1 por raio + 5 por palpite errado.
       </p>
 
-      <div className="row">
+      <div className="row" style={{ gap: 8, marginBottom: 8 }}>
         <button
           className={'btn '+(g.mode==='bot'?'primary':'gray')}
           onClick={()=>g.resetForMode('bot')}
@@ -369,7 +371,16 @@ export default function GameBoard({ currentUser, onGameSaved }) {
       )}
 
       {/* Board with edges */}
-      <div className="row" style={{flexDirection:'column', gap:8}}>
+      <div
+        className="row"
+        style={{
+          flexDirection: 'column',
+          gap: 8,
+          alignItems: 'center',
+          marginTop: 16,
+          marginBottom: 24,
+        }}
+      >
         {/* Top edge */}
         <div className="edgeRow" style={{gap:6}}>
           {range(SIZE).map(c=>(
@@ -450,7 +461,14 @@ export default function GameBoard({ currentUser, onGameSaved }) {
       </div>
 
       {/* Controls */}
-      <div className="row">
+      <div
+        className="row"
+        style={{
+          flexWrap: 'wrap',
+          gap: 8,
+          marginBottom: 16,
+        }}
+      >
         {g.mode==='pvp' && g.pvpPhase==='setup' && !g.matchOver && (
           <button
             className="btn purple"
@@ -486,7 +504,7 @@ export default function GameBoard({ currentUser, onGameSaved }) {
 
       {/* Round flow controls */}
       {g.mode==='pvp' && !g.matchOver && g.roundFinished && (
-        <div className="row">
+        <div className="row" style={{ marginBottom: 16 }}>
           {g.pvpRound===1 ? (
             <button
               className="btn orange"

@@ -25,6 +25,38 @@ export default function App() {
 
   const [lastGameId, setLastGameId] = useState(null);
 
+  // --------- THEME (LIGHT / DARK) ---------
+  const [theme, setTheme] = useState('light');
+
+  // carrega tema salvo ou preferência do SO
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') {
+        setTheme(saved);
+      } else if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+        setTheme('dark');
+      }
+    } catch {
+      // se der erro, fica no default 'light'
+    }
+  }, []);
+
+  // aplica data-theme no <html> e persiste
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      window.localStorage.setItem('theme', theme);
+    } catch {
+      // ignore
+    }
+  }, [theme]);
+
+  function toggleTheme() {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  }
+
+  // --------- CARREGA USUÁRIO LOGADO ---------
   useEffect(() => {
     api
       .getMe()
@@ -42,7 +74,6 @@ export default function App() {
       })
       .catch(() => {});
   }, []);
-
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -63,6 +94,13 @@ export default function App() {
           : await api.register(form);
 
       setCurrentUser(res.user);
+      const url =
+        res.user.avatarUrl ||
+        res.user.avatar ||
+        res.user.photoUrl ||
+        res.user.picture ||
+        '';
+      setAvatarUrl(url);
     } catch (err) {
       setAuthError(err.message || 'Erro ao realizar a operação');
     }
@@ -82,11 +120,25 @@ export default function App() {
     if (gameId) setLastGameId(gameId);
   }
 
+  const themeLabel = theme === 'dark' ? 'Modo claro' : 'Modo escuro';
+
   // ---------- LOGIN / CADASTRO ----------
   if (!currentUser) {
     return (
       <div className="page-root center-all">
         <div className="card auth-card">
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              marginBottom: 8,
+            }}
+          >
+            <button className="btn dark" type="button" onClick={toggleTheme}>
+              {themeLabel}
+            </button>
+          </div>
+
           <h1 className="title-main">Black Box — Bot &amp; 1v1</h1>
           <p className="subtitle">
             Faça login ou cadastro para jogar e aparecer no ranking.
@@ -179,68 +231,68 @@ export default function App() {
           seu desempenho no ranking.
         </p>
 
-        <button className="btn gray" onClick={handleLogout}>
-          Logout
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className="btn dark" type="button" onClick={toggleTheme}>
+            {themeLabel}
+          </button>
+          <button className="btn gray" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       </div>
 
-      {/* perfil */}
-      <div className="card">
-        <h3>Perfil</h3>
-        <p className="small" style={{ marginBottom: 12 }}>
-          Atualize seu avatar. Seus dados de cadastro aparecem abaixo.
-        </p>
-
-        {/* grid de informações do usuário */}
-        <div className="profile-info">
-          <div>
-            <span className="profile-label">Nickname:</span>
-            <span>{currentUser.nickname}</span>
+      {/* Perfil */}
+      <div className="card profile-card">
+        {/* Avatar grande + nickname */}
+        <div className="profile-top">
+          <div className="profile-avatar-wrapper">
+            <img
+              src={
+                avatarUrl ||
+                currentUser.avatarUrl ||
+                currentUser.avatar ||
+                currentUser.photoUrl ||
+                currentUser.picture
+              }
+              alt="Avatar"
+              className="profile-avatar"
+            />
           </div>
-          {currentUser.age && (
-            <div>
-              <span className="profile-label">Idade:</span>
-              <span>{currentUser.age}</span>
-            </div>
-          )}
-          {currentUser.city && (
-            <div>
-              <span className="profile-label">Cidade:</span>
-              <span>{currentUser.city}</span>
-            </div>
-          )}
-          {currentUser.state && (
-            <div>
-              <span className="profile-label">Estado:</span>
-              <span>{currentUser.state}</span>
-            </div>
-          )}
-          {currentUser.country && (
-            <div>
-              <span className="profile-label">País:</span>
-              <span>{currentUser.country}</span>
-            </div>
-          )}
+
+          <div className="profile-top-info">
+            <div className="profile-nickname">@{currentUser.nickname}</div>
+            <div className="profile-subtext">Conta vinculada ao ranking</div>
+          </div>
         </div>
 
-        {/* preview do avatar atual */}
-        {(() => {
-          const src =
-            avatarUrl ||
-            currentUser.avatarUrl ||
-            currentUser.avatar ||
-            currentUser.photoUrl ||
-            currentUser.picture;
+        {/* Informações */}
+        <div className="profile-info-grid">
+          <div className="profile-info-item">
+            <span className="label">Idade</span>
+            <span className="value">{currentUser.age ?? '-'}</span>
+          </div>
 
-          if (!src) return null;
+          <div className="profile-info-item">
+            <span className="label">Cidade</span>
+            <span className="value">{currentUser.city || '-'}</span>
+          </div>
 
-          return (
-            <div className="avatar-preview">
-              <img src={src} alt="Avatar do usuário" />
-            </div>
-          );
-        })()}
+          <div className="profile-info-item">
+            <span className="label">Estado</span>
+            <span className="value">{currentUser.state || '-'}</span>
+          </div>
 
+          <div className="profile-info-item">
+            <span className="label">País</span>
+            <span className="value">{currentUser.country || '-'}</span>
+          </div>
+        </div>
+
+        {/* Texto auxiliar */}
+        <p className="profile-helper">
+          Atualize seu avatar abaixo. Informações do perfil aparecem no ranking
+          e nas partidas.
+        </p>
 
         <AvatarPicker value={avatarUrl} onChange={setAvatarUrl} />
       </div>
@@ -253,7 +305,7 @@ export default function App() {
         />
       </div>
 
-      {/* tabuleiro – sem card em volta para não criar espaço gigante */}
+      {/* tabuleiro */}
       <div className="board-wrapper">
         <GameBoard currentUser={currentUser} onGameSaved={handleGameSaved} />
       </div>

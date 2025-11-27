@@ -15,7 +15,6 @@ router.post('/save', requireAuth, async (req, res) => {
   try {
     let { mode, score, opponentNickname } = req.body;
 
-    // score pode vir como string -> convertemos pra número
     const numericScore = Number(score);
     if (!mode || Number.isNaN(numericScore)) {
       return res
@@ -28,7 +27,6 @@ router.post('/save', requireAuth, async (req, res) => {
       mode,
       score: numericScore,
       opponentNickname: opponentNickname || undefined,
-      // marca o fim da partida explicitamente
       finishedAt: new Date(),
     });
 
@@ -46,35 +44,14 @@ router.post('/save', requireAuth, async (req, res) => {
 
 /**
  * GET /api/games/mine
- * Lista as partidas do usuário logado.
+ * Lista as partidas do usuário logado (da mais recente para a mais antiga).
  */
 router.get('/mine', requireAuth, async (req, res) => {
   try {
-    const games = await Game.find({ player: req.userId })
-      // ordena pela data efetiva (finishedAt se existir, senão createdAt)
-      .sort({ finishedAt: -1, createdAt: -1 })
-      .lean();
+    const playerId = new mongoose.Types.ObjectId(req.userId);
 
-    return res.json({ games });
-  } catch (err) {
-    console.error('Erro ao buscar partidas do usuário:', err);
-    return res
-      .status(500)
-      .json({ error: 'Erro ao carregar partidas do usuário.' });
-  }
-});
-
-/**
- * GET /api/games/ranking
- * Ranking simples: pega melhor score de cada jogador e ordena.
- */
-router.get('/ranking', async (req, res) => {
-  try {
-    const limit = Number(req.query.limit || 20);
-
-    // agrega menor score de cada player (melhor partida)
-    const bestPerPlayer = await Game.aggregate([
-      // cria um campo de data efetiva: finishedAt ou createdAt
+    const games = await Game.aggregate([
+      { $match: { player: playerId } },
       {
         $addFields: {
           effectiveDate: {
@@ -82,30 +59,62 @@ router.get('/ranking', async (req, res) => {
           },
         },
       },
+      { $sort: { effectiveDate: -1 } },
+    ]);
+
+    return res.json({ games });
+  } catch (err) {
+    console.error('Erro ao carregar partidas', err);
+    return res.status(500).json({ error: 'Erro ao carregar partidas.' });
+  }
+});
+
+/**
+ * GET /api/games/ranking
+ * Ranking por melhor score de cada jogador.
+ */
+
+router.get('/ranking', async (req, res) => {
+  try {
+    // por padrão, top 5 – pode sobrescrever com ?limit=10
+    const limit = Number(req.query.limit || 5);
+
+    const bestGames = await Game.aggregate([
+      // data efetiva: finishedAt ou createdAt
       {
-        $group: {
-          _id: '$player',
-          bestScore: { $min: '$score' },
-          lastGameAt: { $max: '$effectiveDate' },
+        $addFields: {
+          effectiveDate: {
+            $ifNull: ['$finishedAt', '$createdAt'],
+          },
         },
       },
-      { $sort: { bestScore: 1, lastGameAt: -1 } },
+      // ordena por melhor score e, em caso de empate, pela partida mais antiga
+      {
+        $sort: {
+          score: 1,
+          effectiveDate: 1,
+        },
+      },
+      // pega as N melhores partidas
       { $limit: limit },
     ]);
 
-    // carrega nicknames
-    const playerIds = bestPerPlayer.map((g) => g._id);
+    // carrega nicknames dos jogadores envolvidos
+    const playerIds = bestGames.map((g) => g.player);
     const users = await User.find({ _id: { $in: playerIds } })
       .select('nickname')
       .lean();
 
     const byId = new Map(users.map((u) => [u._id.toString(), u]));
-    const ranking = bestPerPlayer.map((g, index) => ({
+
+    const ranking = bestGames.map((g, index) => ({
       position: index + 1,
-      playerId: g._id,
-      nickname: byId.get(g._id.toString())?.nickname || 'Jogador',
-      bestScore: g.bestScore,
-      lastGameAt: g.lastGameAt,
+      playerId: g.player,
+      nickname: byId.get(g.player.toString())?.nickname || 'Jogador',
+      bestScore: g.score,
+      mode: g.mode || null,
+      opponent: g.opponentNickname || null, // campo salvo na partida
+      lastGameAt: g.effectiveDate,
     }));
 
     return res.json({ ranking });
@@ -114,5 +123,6 @@ router.get('/ranking', async (req, res) => {
     return res.status(500).json({ error: 'Erro ao carregar ranking.' });
   }
 });
+
 
 export default router;

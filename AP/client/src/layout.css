@@ -1,5 +1,43 @@
 /* client/src/layout.css */
 
+/* ------------ THEME TOKENS ------------ */
+
+:root {
+  --bg: #f5f5f7;
+  --bg-card: #ffffff;
+  --bg-soft: #f9fafb;
+  --text: #111827;
+  --text-muted: #6b7280;
+  --border-subtle: #e5e7eb;
+  --accent: #2563eb;
+  --accent-soft: #e0ecff;
+  --btn-dark-bg: #111827;
+  --btn-dark-text: #e5e7eb;
+
+  --badge-bg: #eff6ff;
+  --badge-border: #bfdbfe;
+  --badge-text: #1d4ed8;
+}
+
+:root[data-theme='dark'] {
+  --bg: #020617;
+  --bg-card: #0b1120;
+  --bg-soft: #020617;
+  --text: #e5e7eb;
+  --text-muted: #9ca3af;
+  --border-subtle: #1f2937;
+  --accent: #3b82f6;
+  --accent-soft: #0f172a;
+  --btn-dark-bg: #e5e7eb;
+  --btn-dark-text: #020617;
+
+  --badge-bg: #0f172a;
+  --badge-border: #1d4ed8;
+  --badge-text: #bfdbfe;
+}
+
+/* ------------ LAYOUT BÁSICO ------------ */
+
 .page-root {
   width: 100%;
   min-height: 100vh;
@@ -7,6 +45,8 @@
   align-items: center;
   flex-direction: column;
   padding: 20px;
+  background: var(--bg);
+  color: var(--text);
 }
 
 .center-all {
@@ -20,11 +60,13 @@
 .card {
   width: 100%;
   max-width: 1100px;
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 12px;
   padding: 20px;
   margin-top: 16px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1);
+  border: 1px solid var(--border-subtle);
+  color: var(--text);
 }
 
 .top-row {
@@ -69,7 +111,7 @@
 }
 
 .error-text {
-  color: red;
+  color: #dc2626;
   font-size: 13px;
 }
 
@@ -84,7 +126,7 @@
 
 .profile-label {
   font-weight: 600;
-  color: #6b7280;
+  color: var(--text-muted);
   margin-right: 4px;
 }
 
@@ -94,6 +136,8 @@
   max-width: 1100px;
   margin-top: 16px;
 }
+
+/* ------------ AVATAR / PREVIEW ------------ */
 
 .avatar-preview {
   margin: 12px 0 8px;
@@ -107,5 +151,343 @@
   height: 72px;
   border-radius: 999px;
   object-fit: cover;
-  border: 2px solid #2563eb;
+  border: 2px solid var(--accent);
+}
+
+/* ------------ LAYOUT MODERNO DO PERFIL ------------ */
+
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px !important;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Topo com avatar + nome */
+.profile-top {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.profile-avatar-wrapper {
+  width: 120px;
+  height: 120px;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 4px solid var(--accent);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-top-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-nickname {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.profile-subtext {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* GRID de informações */
+.profile-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-soft);
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+}
+
+.profile-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-info-item .label {
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.profile-info-item .value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Texto auxiliar */
+.profile-helper {
+  margin-top: -8px;
+  text-align: left;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* AvatarPicker container */
+.profile-card .avatar-picker-container {
+  margin-top: -8px;
+}
+
+/* preview em card */
+.avatar-preview-card {
+  margin-top: 16px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-soft);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.avatar-preview-header {
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.avatar-preview-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.avatar-preview-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.avatar-preview-body {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.avatar-preview-img {
+  width: 88px;
+  height: 88px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 3px solid var(--accent);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.avatar-preview-empty {
+  font-size: 13px;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* ------------ BOTÕES EXTRA ------------ */
+
+.btn.red {
+  background: #dc2626;
+  color: white;
+}
+
+.btn.red:hover {
+  background: #b91c1c;
+}
+
+/* ------------ RANKING / HIGH SCORE ------------ */
+
+.ranking-card {
+  padding: 24px 28px !important;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+}
+
+.ranking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.ranking-subtitle {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.ranking-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  border: 1px solid var(--badge-border);
+}
+
+/* tabela dentro do ranking */
+.ranking-table-wrapper {
+  margin-top: 8px;
+  overflow-x: auto;
+}
+
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  background: var(--bg-card);
+  color: var(--text);
+}
+
+.ranking-table th,
+.ranking-table td {
+  padding: 8px 10px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.ranking-table th {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-soft);
+}
+
+/* linhas */
+.ranking-row:nth-child(even) td {
+  background: var(--bg-soft);
+}
+
+.ranking-row:nth-child(odd) td {
+  background: var(--bg-card);
+}
+
+/* destaque para o 1º lugar */
+.ranking-row-first td {
+  background: var(--accent-soft) !important;
+  border-bottom: 1px solid var(--badge-border);
+  font-weight: 600;
+}
+
+/* ---------- MINHAS PARTIDAS (LISTA DE JOGOS) ---------- */
+/* Alvo: primeiro bloco dentro de .two-lists (MyGames) */
+
+.two-lists > *:first-child {
+  padding: 24px 28px !important;
+  background: var(--bg-card);
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.22);
+}
+
+/* Título "Minhas partidas" */
+.two-lists > *:first-child h2,
+.two-lists > *:first-child h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Mensagem de ajuda / erro */
+.two-lists > *:first-child p,
+.two-lists > *:first-child .small {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Tabela em si */
+.two-lists > *:first-child table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Cabeçalho */
+.two-lists > *:first-child thead th {
+  padding: 8px 10px;
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 11px;
+  background: color-mix(in srgb, var(--bg-card) 70%, var(--accent-soft) 30%);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Cantos arredondados no header */
+.two-lists > *:first-child thead th:first-child {
+  border-top-left-radius: 12px;
+}
+.two-lists > *:first-child thead th:last-child {
+  border-top-right-radius: 12px;
+}
+
+/* Células */
+.two-lists > *:first-child tbody td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Zebra */
+.two-lists > *:first-child tbody tr:nth-child(odd) td {
+  background: color-mix(in srgb, var(--bg-card) 90%, #000 10%);
+}
+.two-lists > *:first-child tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--bg-card) 97%, #000 3%);
+}
+
+/* Última linha sem borda extra */
+.two-lists > *:first-child tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Hover da linha */
+.two-lists > *:first-child tbody tr:hover td {
+  background: color-mix(in srgb, var(--accent-soft) 70%, var(--bg-card) 30%);
+}
+
+/* Link "Assistir" / "sem vídeo" */
+.two-lists > *:first-child tbody td a {
+  color: var(--accent);
+  font-weight: 500;
+  text-decoration: none;
+}
+.two-lists > *:first-child tbody td a:hover {
+  text-decoration: underline;
+}
+
+/* Responsivo: permite scroll horizontal só na tabela */
+.two-lists > *:first-child {
+  overflow-x: auto;
+}
+.two-lists > *:first-child table {
+  min-width: 720px;
 }

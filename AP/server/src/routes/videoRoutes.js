@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import { requireAuth } from '../middleware/auth.js';
 import { getVideoBucket } from '../config/db.js';
 import Video from '../models/Video.js';
+import Game from '../models/Game.js';
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -29,7 +30,6 @@ router.post(
         req.file.size
       );
 
-      // gameId opcional vindo do front (RecordingControls)
       const { gameId } = req.body;
       let gameObjectId = null;
       if (gameId && mongoose.Types.ObjectId.isValid(gameId)) {
@@ -37,7 +37,6 @@ router.post(
       }
 
       const bucket = getVideoBucket();
-
       const filename =
         req.file.originalname || `partida-${Date.now()}.webm`;
 
@@ -52,43 +51,44 @@ router.post(
         }
       });
 
-    uploadStream.on('finish', async () => {
-      try {
-        // cria documento do vídeo
-        const videoDoc = await Video.create({
-          owner: req.userId,
-          filename,
-          fileId: uploadStream.id,
-          mimeType: req.file.mimetype || 'video/webm',
-        });
-
-        console.log('Vídeo salvo com ID', videoDoc._id.toString());
-
-        // 🔥 Agora precisamos vincular o vídeo à partida
-        if (req.body.gameId) {
-          const gameId = req.body.gameId;
-
-          await Game.findByIdAndUpdate(gameId, {
-            videoUrl: `/api/videos/${videoDoc._id}/stream`,
+      uploadStream.on('finish', async () => {
+        try {
+          const videoDoc = await Video.create({
+            owner: req.userId,
+            filename,
+            fileId: uploadStream.id,
+            mimeType: req.file.mimetype || 'video/webm',
           });
 
-          console.log('Video vinculado ao game', gameId);
+          console.log('Vídeo salvo com ID', videoDoc._id.toString());
+
+          if (gameObjectId) {
+            await Game.findByIdAndUpdate(gameObjectId, {
+              video: videoDoc._id,
+            });
+            console.log(
+              'Vídeo vinculado ao game',
+              gameObjectId.toString()
+            );
+          }
+
+          const shareUrl = `/api/videos/${videoDoc._id}/stream`;
+
+          res.json({
+            videoId: videoDoc._id,
+            gameId: gameObjectId,
+            shareUrl,
+          });
+        } catch (err) {
+          console.error('Erro ao criar documento de vídeo:', err);
+          if (!res.headersSent) {
+            res
+              .status(500)
+              .json({ error: 'Erro ao registrar vídeo no banco.' });
+          }
         }
+      });
 
-        res.json({
-          videoId: videoDoc._id,
-          videoUrl: `/api/videos/${videoDoc._id}/stream`,
-        });
-
-      } catch (err) {
-        console.error('Erro ao criar documento de vídeo:', err);
-        if (!res.headersSent) {
-          res.status(500).json({ error: 'Erro ao registrar vídeo no banco.' });
-        }
-      }
-    });
-
-      // dispara o upload (usa o buffer do multer)
       uploadStream.end(req.file.buffer);
     } catch (err) {
       console.error('upload vídeo error:', err);
@@ -113,7 +113,6 @@ router.get('/:id/stream', async (req, res) => {
     }
 
     const bucket = getVideoBucket();
-
     res.setHeader('Content-Type', videoDoc.mimeType || 'video/webm');
 
     const downloadStream = bucket.openDownloadStream(videoDoc.fileId);
