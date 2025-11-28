@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação Black Box - Projeto Web</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css" id="theme">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/arduino-light.min.css">
+
+    <style>
+        .reveal h1, .reveal h2, .reveal h3 { text-transform: none; }
+        .reveal pre { box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 100%; }
+        .reveal code { font-size: 0.8em; line-height: 1.2em; max-height: 500px; }
+        .two-columns { display: flex; justify-content: space-between; gap: 20px; }
+        .col { flex: 1; }
+        .highlight { color: #2563eb; font-weight: bold; }
+        .feature-icon { font-size: 2em; margin-bottom: 10px; }
+        iframe { width: 100%; height: 500px; border: 1px solid #ccc; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+
+        <section>
+            <h1>Black Box: Bot & 1v1</h1>
+            <h3>Projeto de Desenvolvimento Web</h3>
+            <p>
+                <small>Desenvolvido com MERN Stack + Vite + WebRTC</small>
+            </p>
+            <p style="margin-top: 20px; font-size: 0.6em; color: #666;">
+                Navegue usando as setas do teclado ➡
+            </p>
+        </section>
+
+        <section>
+            <h2>Sumário</h2>
+            <ul>
+                <li>Visão Geral do Projeto (Usuário)</li>
+                <li>Arquitetura e Tecnologias (Dev)</li>
+                <li>Frontend: Lógica do Jogo e React</li>
+                <li>Backend: API, Auth e Banco de Dados</li>
+                <li>Funcionalidades Avançadas (Vídeo e Sockets)</li>
+                <li>Segurança</li>
+                <li>Demonstração Prática</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>O que é o Black Box?</h2>
+            <div class="two-columns">
+                <div class="col" style="font-size: 0.8em; text-align: left;">
+                    <p>Um jogo de lógica e dedução baseado em "raios" e "átomos" escondidos em um tabuleiro 8x8.</p>
+                    <ul>
+                        <li><strong>Modo Bot:</strong> Jogue sozinho contra o computador (geração aleatória).</li>
+                        <li><strong>Modo 1v1:</strong> Jogue localmente (pass-and-play) com contagem de score.</li>
+                        <li><strong>Ranking:</strong> Tabela global de melhores pontuações.</li>
+                        <li><strong>Replay:</strong> Gravação da partida em vídeo.</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; width: 200px; margin: auto;">
+                        <div style="background:#ddd; height:40px;"></div><div style="background:#ddd; height:40px;"></div><div style="background:#ddd; height:40px;"></div><div style="background:#ddd; height:40px;"></div>
+                        <div style="background:#ddd; height:40px;"></div><div style="background:#2563eb; height:40px;"></div><div style="background:#ddd; height:40px;"></div><div style="background:#ddd; height:40px;"></div>
+                        <div style="background:#ddd; height:40px;"></div><div style="background:#ddd; height:40px;"></div><div style="background:#ddd; height:40px;"></div><div style="background:#ddd; height:40px;"></div>
+                    </div>
+                    <p style="font-size: 0.6em;">Conceito: Disparar raios para triangular posições.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Arquitetura Tecnológica</h2>
+            <p>Stack <strong>MERN</strong> (Mongo, Express, React, Node)</p>
+            <div style="font-size: 0.8em; text-align: left;">
+                <ul>
+                    <li><strong>Frontend:</strong> React (Vite), CSS Modules.</li>
+                    <li><strong>Backend:</strong> Node.js com Express.</li>
+                    <li><strong>Database:</strong> MongoDB (Mongoose) + GridFS (Vídeos).</li>
+                    <li><strong>Realtime:</strong> Socket.io (Chat e Matchmaking).</li>
+                    <li><strong>Media:</strong> WebRTC (Display Media) para gravação.</li>
+                </ul>
+            </div>
+            <div style="margin-top: 20px; font-size: 0.7em; background: #f0f0f0; padding: 10px; border-radius: 8px;">
+                <code>Client (Port 5173) ⬅️ Proxy ➡️ Server (Port 4000) ⬅️ MongoDB</code>
+            </div>
+        </section>
+
+        <section>
+            <h2>Frontend: A Lógica dos Raios</h2>
+            <p style="font-size: 0.6em;">Arquivo: <code>client/src/components/GameBoard.jsx</code></p>
+            <pre><code class="language-javascript" data-trim data-line-numbers="1-15">
+// Lógica de simulação de raios no tabuleiro
+function shootRay(atoms, entryIdx){
+  let {r,c,dir} = entryFromEdgeIndex(entryIdx);
+  // ... verificação de colisão inicial ...
+
+  for(let steps=0; steps<1000; steps++){
+    // Verifica colisão direta (HIT)
+    if(hasAtom(atoms,tr,tc)) return { type:'HIT' };
+
+    // Verifica deflexão (REFLECTION)
+    const ld=inside(tr,tc-1) && hasAtom(atoms,tr,tc-1);
+    const rd=inside(tr,tc+1) && hasAtom(atoms,tr,tc+1);
+
+    // ... lógica de mudança de direção ...
+  }
+  return { type:'EXIT', exit: edgeIndexFromExit(tr,tc) };
+}
+                </code></pre>
+            <p style="font-size: 0.5em;">Utilizamos hooks (<code>useState</code>, <code>useMemo</code>) para gerenciar o estado do tabuleiro e placar.</p>
+        </section>
+
+        <section>
+            <h2>Backend: Autenticação Segura</h2>
+            <p style="font-size: 0.6em;">Arquivo: <code>server/src/controllers/authController.js</code></p>
+            <div style="font-size: 0.7em;">
+                <ul>
+                    <li>Uso de <strong>JWT (JSON Web Tokens)</strong>.</li>
+                    <li>Armazenamento seguro em <strong>Cookies HTTP-Only</strong> (previne XSS).</li>
+                    <li>Senha com Hash via <strong>Bcrypt</strong>.</li>
+                </ul>
+            </div>
+            <pre><code class="language-javascript" data-trim data-line-numbers="5-12">
+// Login controller
+const ok = await bcrypt.compare(password, user.passwordHash);
+if (!ok) return res.status(401).json({ error: 'Inválido' });
+
+const token = signToken(user._id);
+
+res.cookie('bbx_token', token, {
+  httpOnly: true, // Inacessível via JS no navegador
+  sameSite: 'lax',
+  secure: false, // Em prod seria true
+}).json({ user: ... });
+                </code></pre>
+        </section>
+
+        <section>
+            <h2>Upload de Vídeo (GridFS)</h2>
+            <div class="two-columns">
+                <div class="col" style="font-size: 0.7em;">
+                    <p><strong>Frontend:</strong> Captura a tela com <code>navigator.mediaDevices.getDisplayMedia</code> e envia um Blob.</p>
+                    <p><strong>Backend:</strong> Recebe via Multer e faz stream direto para o MongoDB usando <strong>GridFS</strong> (para arquivos grandes).</p>
+                </div>
+                <div class="col">
+                        <pre><code class="language-javascript" style="font-size: 0.6em;" data-trim>
+// server/src/routes/videoRoutes.js
+const bucket = getVideoBucket();
+const uploadStream = bucket.openUploadStream(filename);
+
+uploadStream.on('finish', async () => {
+    await Video.create({
+        fileId: uploadStream.id,
+        owner: req.userId
+    });
+    // ...
+});
+
+uploadStream.end(req.file.buffer);
+                        </code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Aspectos de Segurança</h2>
+            <ul>
+                <li><strong>Helmet:</strong> Middleware para proteger headers HTTP.</li>
+                <li><strong>CORS:</strong> Configurado para aceitar apenas a origem do cliente (`http://localhost:5173`).</li>
+                <li><strong>Input Validation:</strong> Verificação de tipos no backend antes de processar.</li>
+                <li><strong>Autenticação:</strong> Proteção de rotas com middleware <code>requireAuth</code>.</li>
+            </ul>
+            <pre><code class="language-javascript" data-trim>
+// server/src/middleware/auth.js
+export function requireAuth(req, res, next) {
+  const token = req.cookies?.bbx_token;
+  if (!token) return res.status(401).json(...);
+  // Verificação do token JWT...
+}
+                </code></pre>
+        </section>
+
+        <section>
+            <h2>Demonstração Prática</h2>
+            <p style="font-size: 0.7em;">
+                O sistema está rodando localmente. Abaixo, a interface de Login/Jogo.
+            </p>
+            <iframe src="https://web.lucas.barao.vms.ufsc.br/" title="Demonstração Black Box"></iframe>
+            <p style="font-size: 0.5em; margin-top: 10px;">
+                <a href="https://web.lucas.barao.vms.ufsc.br/" target="_blank">Abrir em nova aba 🔗</a>
+            </p>
+        </section>
+
+        <section>
+            <h2>Modelagem de Dados</h2>
+            <div class="two-columns" style="font-size: 0.7em;">
+                <div class="col">
+                    <h4>User</h4>
+                    <ul>
+                        <li>Nickname (Unique)</li>
+                        <li>PasswordHash</li>
+                        <li>AvatarUrl</li>
+                        <li>Dados demográficos</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h4>Game</h4>
+                    <ul>
+                        <li>Player (Ref User)</li>
+                        <li>Mode ('bot' | 'pvp')</li>
+                        <li>Score (Menor é melhor)</li>
+                        <li>Video (Ref Video)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Conclusão</h2>
+            <ul>
+                <li>Projeto funcional integrando diversas tecnologias modernas.</li>
+                <li>Foco em UX (Avatar, Drag & Drop, Feedback visual).</li>
+                <li>Foco em Performance (Streams de vídeo, WebSockets).</li>
+            </ul>
+            <h3 style="margin-top: 40px;">Dúvidas?</h3>
+        </section>
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+<script>
+    Reveal.initialize({
+        hash: true,
+        // Configuração para não usar tema escuro e facilitar leitura
+        center: true,
+        slideNumber: true,
+        plugins: [ RevealHighlight ]
+    });
+</script>
+</body>
+</html>

@@ -18,13 +18,24 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use(cookieParser());
 
-// CORS simples para dev
-app.use(
-  cors({
-    origin: 'http://localhost:5173',
-    credentials: true,
-  })
-);
+const allowedOrigins = [
+  'http://localhost:5173',                      // Para desenvolvimento local
+  'https://web.lucas.barao.vms.ufsc.br'         // SEU DOMÍNIO DE PRODUÇÃO
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Permite requisições sem origin (como Postman ou servidor-para-servidor)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'A política de CORS deste site não permite acesso desta origem.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+}));
 
 // rotas
 app.use('/api/auth', authRoutes);
@@ -32,6 +43,6 @@ app.use('/api/games', gameRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/videos', videoRoutes);
 
-app.get('/health', (req, res) => res.json({ ok: true }));
+app.get('/api/health', (req, res) => res.json({ ok: true }));
 
 export default app;
